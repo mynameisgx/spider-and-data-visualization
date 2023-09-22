@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>layout 管理界面大布局示例 - Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/layui.css">
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo layui-hide-xs layui-bg-black">豆瓣读书</div>
+    <!-- 头部区域（可配合layui 已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+      <!-- 移动端显示 -->
+      <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+        <i class="layui-icon layui-icon-spread-left"></i>
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+        <a href="javascript:;">
+            姓名：{{ session['doct_name'] }}
+            地址：{{ session['doct_address'] }}
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="/doctor">个人信息</a></dd>
+          <dd><a href="javascript:;">设置</a></dd>
+          <dd><a href="/login">退出</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+        <a href="javascript:;">
+          <i class="layui-icon layui-icon-more-vertical"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <ul class="layui-nav layui-nav-tree" lay-filter="test">
+        <li class="layui-nav-item layui-nav-itemed" id="page1" data-url="/page1">
+          <a class="" href="javascript:;">数据概况</a>
+        </li>
+
+        <li class="layui-nav-item">
+          <a>可视化</a>
+          <dl class="layui-nav-child">
+            <dd class="layui-nav-item layui-nav-itemed" id="page2" href="/page2"><a>评分排名前20</a></dd>
+            <dd class="layui-nav-item layui-nav-itemed" id="page3" href="/page3"><a>page3</a></dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="layui-body">
+    <!--tabs标签-->
+    <div class="layui-tab layui-tab-card" lay-filter="demo" lay-allowclose="true" >
+<!--lay-allowclose="true"是设置允许删除-->
+      <ul class="layui-tab-title">
+<!--layui-this表示当前被选中的项-->
+        <li lay-id="page1" class="layui-this">数据概况</li>
+        <li lay-id="page2">评分排名前20</li>
+        <li lay-id="page3">评分分布情况</li>
+      </ul>
+      <div class="layui-tab-content" style="height: 100%">
+        <div class="layui-tab-item layui-show">
+          <iframe style="width: 100%;height: 600px;overflow: scroll" scrolling="no" src="/page1"></iframe>
+        </div>
+        <div class="layui-tab-item">
+<!--          <img src="/page2" style="width: 100%;height: 600px;"scrolling="no"/>-->
+          <iframe style="width: 100%;height: 600px;" scrolling="no" src="/page2"></iframe>
+        </div>
+        <div class="layui-tab-item">
+<!--          <img src="/page3" style="width: 100%;height: 600px;"scrolling="no"/>-->
+          <iframe style="width: 100%;height: 600px;" scrolling="no" src="/page3"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layui-footer">
+    <!-- 底部固定区域 -->
+    底部固定区域
+  </div>
+</div>
+
+<script src="/static/layui.js"></script>
+<script>
+layui.use(['element', 'layer', 'util'], function(){
+  var element = layui.element;
+  var layer = layui.layer;
+  var util = layui.util;
+  var $ = layui.$;
+
+  // 导航项点击事件
+  $('.layui-nav-itemed').on('click', function(){
+    var url = $(this).data('url');
+    var id = $(this).attr('id');
+    var title = $(this).text();
+    // 判断选项卡是否已存在
+    var exists = false;
+    $('.layui-tab-title li').each(function(){
+      if ($(this).attr('lay-id') == id) {
+        exists = true;
+        return false;
+      }
+    });
+
+    // 如果选项卡已存在，则切换到对应选项卡页面
+    if (exists) {
+      element.tabChange('demo', id);
+      return;
+    }
+
+    // 添加新的选项卡
+    element.tabAdd('demo', {
+      title: title,
+      content: '<iframe style="width: 100%;height: 100%;" scrolling="no" src="' + url + '"></iframe>',
+      id: id
+    });
+
+    // 切换到新添加的选项卡
+    element.tabChange('demo', id);
+  });
+
+  //头部事件
+  util.event('lay-header-event', {
+    menuLeft: function(othis){ // 左侧菜单事件
+      layer.msg('展开左侧菜单的操作', {icon: 0});
+    },
+    menuRight: function(){  // 右侧菜单事件
+      layer.open({
+        type: 1,
+        title: '更多',
+        content: '<div style="padding: 15px;">处理右侧面板的操作</div>',
+        area: ['260px', '100%'],
+        offset: 'rt', // 右上角
+        anim: 'slideLeft', // 从右侧抽屉滑出
+        shadeClose: true,
+        scrollbar: false
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>

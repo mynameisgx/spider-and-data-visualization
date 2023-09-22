@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page 2</title>
+    <script src="/static/echarts.min.js"></script>
+</head>
+<body>
+   <div id="picture" style="width: 600px;height: 400px;">
+    </div>
+<script type="text/javascript">
+
+      var myChart=echarts.init(document.getElementById("picture"),);
+
+      //safe是一个过滤器，将pie_options变量的值作为JSON数据输出到模板中，并禁用HTML转义。
+      var option={{ pyecharts_option|safe }};
+
+      myChart.setOption(option);
+    </script>
+</body>
+</html>

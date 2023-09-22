@@ -1,0 +1,48 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <title>豆瓣读书</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<table>-->
+<!--  {{table|safe}}-->
+<!--</table>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 引入Layui库的相关资源 -->
+    <link rel="stylesheet" href="/static/css/layui.css">
+</head>
+<body>
+    <table id="data-table" lay-filter="demo"></table>
+
+    <script src="/static/layui.js"></script>
+<script src="/static/layui.js"></script>
+<script>
+
+    var tableData = {{ table_data | tojson }};
+    //tojson过滤器是模板引擎提供的一种过滤器，用于将Python对象转换为JSON格式的字符串。
+    layui.use('table', function(){
+        var table = layui.table;
+
+        // 渲染表格
+        table.render({
+            elem: '#data-table',
+            cols: [[
+                {field:'name', title: '书名'},
+                {field:'author', title: '作者'},
+                {field:'publisher', title: '出版社'},
+                {field:'date', title: '日期'},
+                {field:'price', title: '价格'},
+                {field:'rate', title: '评分'},
+                {field:'comment', title: '评价'},
+            ]],
+            data: tableData,
+            page:true,
+        });
+    });
+</script>
+</body>
+</html>
